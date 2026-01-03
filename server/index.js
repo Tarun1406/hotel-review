@@ -9,14 +9,35 @@ const { getReview, postReview, checkLocation, checkHotel, getLocation, getHotel,
 
 const app = express();
 
-const MONGO_URI = `mongodb+srv://${process.env.mongo_user_name}:${process.env.mongo_password}@cluster0.o14lsej.mongodb.net/?retryWrites=true&w=majority`;
+// Prepare mongoose options and URI
+// Suppress upcoming Mongoose 7 strictQuery change warning by making intent explicit
+mongoose.set('strictQuery', false);
 
-mongoose.connect(MONGO_URI, { useNewUrlParser: true, useUnifiedTopology: true }, (err) => {
-    if (err) {
-        console.log(err);
-    }
-    else console.log('connected to DB!');
-})
+const buildDefaultUri = () => {
+    const user = encodeURIComponent(process.env.mongo_user_name || '');
+    const pass = encodeURIComponent(process.env.mongo_password || '');
+    // NOTE: if you prefer a different DB name, update below (hotelreview used as example)
+    return `mongodb+srv://${user}:${pass}@cluster0.bu8j6qg.mongodb.net/hotelreview?retryWrites=true&w=majority`;
+};
+
+const MONGO_URI = process.env.MONGO_URI || buildDefaultUri();
+
+mongoose.connect(MONGO_URI, { useNewUrlParser: true, useUnifiedTopology: true })
+    .then(() => console.log('connected to DB!'))
+    .catch((err) => {
+        console.error('MongoDB connection error:');
+        console.error(err && err.message ? err.message : err);
+        // Helpful hint for SRV DNS lookup failures
+        if (err && err.code === 'ENOTFOUND') {
+            console.error('\nDNS SRV lookup failed for the Atlas host. Possible causes:');
+            console.error('- Incorrect cluster host in the URI (did you change the cluster name?)');
+            console.error('- Your network/DNS blocks SRV lookups or has no internet access');
+            console.error('\nQuick checks:');
+            console.error('  - Run: dig +short SRV _mongodb._tcp.cluster0.o14lsej.mongodb.net');
+            console.error('  - Or: nslookup -type=SRV _mongodb._tcp.cluster0.o14lsej.mongodb.net');
+            console.error('\nIf SRV fails, try using the "Standard" (non-SRV) connection string from Atlas or check your DNS settings (try Google DNS 8.8.8.8).');
+        }
+    });
 
 const corsOption = {
     origin: '*',

@@ -106,7 +106,7 @@ const Search = () => {
                                 <div key={idx}>
                                     <div className="hotel">
                                         <div className="image-container">
-                                            <img src={images[idx]} />
+                                            <img src={images[idx]} alt={a.hotel || `Hotel ${idx + 1}`} />
                                             <span className="rank">
                                                 Rank: #{idx + 1}
                                                 <span className="hotel-rating">

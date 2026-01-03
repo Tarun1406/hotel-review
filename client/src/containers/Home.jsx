@@ -12,16 +12,19 @@ const Home = () => {
     }
 
     useEffect(() => {
-        setInterval(updateImageIndex, 2000);
+        const id = setInterval(updateImageIndex, 2000);
+        return () => clearInterval(id);
     }, []);
     
     return (
         <>
             <Navbar />
             <div className="body">
-                <div className="image-slideshow">
-                    {images.map((img, idx) => <img key={idx} className={idx === imageIndex ? 'visible' : 'not-visible'} src={img} />)}
-                </div>
+                                <div className="image-slideshow">
+                                        {images.map((img, idx) => (
+                                            <img key={idx} className={idx === imageIndex ? 'visible' : 'not-visible'} src={img} alt={`slide ${idx + 1}`} />
+                                        ))}
+                                </div>
             </div>
         </>
     )

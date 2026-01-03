@@ -10,15 +10,19 @@ const RatingStars = (props) => {
   const [value, setValue] = useState(values.rating);
 
   useEffect(() => {
-    setValues((prev) => { return { ...prev, rating: value } });
-    setStars((prev) => []);
+    // update parent value
+    setValues((prev) => ({ ...prev, rating: value }));
+
+    // build stars array in a local var to avoid repeated state updates
+    const newStars = [];
     for (let i = 0; i < value; i++) {
-      setStars((prev) => [...prev, { icon: StarOutlinedIcon, outline: true }])
+      newStars.push({ icon: StarOutlinedIcon, outline: true });
     }
     for (let i = value; i < count; i++) {
-      setStars((prev) => [...prev, { icon: StarBorderOutlinedIcon, outline: false }])
+      newStars.push({ icon: StarBorderOutlinedIcon, outline: false });
     }
-  }, [value]);
+    setStars(newStars);
+  }, [value, count, setValues]);
   
   return (
     <div className="star-div form-input">
@@ -32,8 +36,14 @@ const RatingStars = (props) => {
   )
 }
 
-PropTypes.defaultValues = {
-    count: 5
+RatingStars.defaultProps = {
+  count: 5
+}
+
+RatingStars.propTypes = {
+  count: PropTypes.number,
+  values: PropTypes.object.isRequired,
+  setValues: PropTypes.func.isRequired,
 }
 
 export default RatingStars

@@ -1,0 +1,44 @@
+.app-toast {
+  position: fixed;
+  right: 20px;
+  top: 20px;
+  z-index: 9999;
+  min-width: 220px;
+  max-width: 420px;
+  box-shadow: 0 6px 18px rgba(0,0,0,0.12);
+  border-radius: 8px;
+  overflow: hidden;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial;
+  animation: toastSlideIn 260ms ease both;
+}
+
+.app-toast .toast-content {
+  padding: 12px 14px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+}
+
+.app-toast .toast-text { flex: 1; font-size: 14px; }
+
+.app-toast.success .toast-text { font-weight: 600; }
+
+.app-toast.success { background: #ecfdf5; color: #065f46; border: 1px solid #bbf7d0; }
+.app-toast.error { background: #fff5f5; color: #7f1d1d; border: 1px solid #fecaca; }
+.app-toast.info { background: #f0f9ff; color: #075985; border: 1px solid #bae6fd; }
+
+.toast-close {
+  background: transparent;
+  border: none;
+  color: inherit;
+  font-size: 18px;
+  cursor: pointer;
+  padding: 4px 6px;
+  line-height: 1;
+}
+
+@keyframes toastSlideIn {
+  from { transform: translateY(-8px); opacity: 0; }
+  to { transform: translateY(0); opacity: 1; }
+}
